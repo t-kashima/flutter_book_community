@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_book_community/model/community.dart';
+import 'package:flutter_book_community/repository/community_repository.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,6 +47,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  List<Community> _communities = [];
+
+  var communityRepository = new CommunityRepository();
 
   @override
   void initState() {
@@ -53,32 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _fetch() async {
-    var response =
-        await Firestore.instance.collection("communities").getDocuments();
-    response.documents.forEach((community) {
-      debugPrint(community.data["title"]);
+    var communities = await communityRepository.fetchCommunities();
+
+    setState(() {
+      _communities = communities;
     });
-    // Firestore.instance.collection("communities").snapshots().listen((data) {
-    //   data.documents.forEach((community) {
-    //     debugPrint(community.data["title"]);
-    //   });
-    //   // data.documentChanges.forEach((data) {
-    //   //   if (data.type == DocumentChangeType.added) {
-    //   //     debugPrint(data.document.data.toString());
-    //   //   }
-    //   //   if (data.type == DocumentChangeType.modified) {
-    //   //     debugPrint(data.document.data.toString());
-    //   //   }
-    //   // });
-    // });
   }
 
   void _incrementCounter() {
-    // Firestore.instance
-    //     .collection('books')
-    //     .document()
-    //     .setData({'title': 'title', 'author': 'author'});
-
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -91,46 +78,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    var communities =
+        _communities.map((community) => Text(community.title)).toList();
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
+      body: new ListView(
+        children: communities,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
