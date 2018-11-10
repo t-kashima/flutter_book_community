@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -45,7 +46,39 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _fetch();
+  }
+
+  void _fetch() async {
+    var response =
+        await Firestore.instance.collection("communities").getDocuments();
+    response.documents.forEach((community) {
+      debugPrint(community.data["title"]);
+    });
+    // Firestore.instance.collection("communities").snapshots().listen((data) {
+    //   data.documents.forEach((community) {
+    //     debugPrint(community.data["title"]);
+    //   });
+    //   // data.documentChanges.forEach((data) {
+    //   //   if (data.type == DocumentChangeType.added) {
+    //   //     debugPrint(data.document.data.toString());
+    //   //   }
+    //   //   if (data.type == DocumentChangeType.modified) {
+    //   //     debugPrint(data.document.data.toString());
+    //   //   }
+    //   // });
+    // });
+  }
+
   void _incrementCounter() {
+    // Firestore.instance
+    //     .collection('books')
+    //     .document()
+    //     .setData({'title': 'title', 'author': 'author'});
+
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
