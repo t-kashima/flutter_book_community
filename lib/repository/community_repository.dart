@@ -6,7 +6,7 @@ class CommunityRepository {
     var response =
         await Firestore.instance.collection("communities").getDocuments();
     return response.documents
-        .map((f) => Community(title: f.data["title"]))
+        .map((f) => Community(id: f.data["id"], title: f.data["title"]))
         .toList();
   }
 }

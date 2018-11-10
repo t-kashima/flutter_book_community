@@ -78,8 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var communities =
-        _communities.map((community) => Text(community.title)).toList();
+    var communities = _communities.map((community) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.black26)),
+        ),
+        child: _buildFlatButton(
+            label: community.title,
+            onPressed: () {
+              debugPrint("onPressed: ${community.id}");
+            }),
+      );
+    }).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -95,6 +105,23 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildFlatButton({String label, VoidCallback onPressed}) {
+    return new FlatButton(
+      padding: const EdgeInsets.only(top: 30, left: 20, bottom: 30, right: 20),
+      onPressed: onPressed,
+      child: new Container(
+        alignment: Alignment(-1, 0),
+        child: new Text(
+          label,
+          style: new TextStyle(
+            fontSize: 18.0,
+          ),
+          textAlign: TextAlign.start,
+        ),
+      ),
     );
   }
 }
