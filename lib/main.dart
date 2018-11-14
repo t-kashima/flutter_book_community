@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_book_community/model/community.dart';
 import 'package:flutter_book_community/repository/community_repository.dart';
+import 'package:flutter_book_community/ui/community.dart';
 
 void main() => runApp(MyApp());
 
@@ -86,7 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: _buildFlatButton(
             label: community.title,
             onPressed: () {
-              debugPrint("onPressed: ${community.id}");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CommunityPage.newInstance(id: community.id)));
             }),
       );
     }).toList();
